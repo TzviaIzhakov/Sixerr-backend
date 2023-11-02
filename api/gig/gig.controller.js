@@ -31,14 +31,14 @@ export async function getGigById(req, res) {
 export async function addGig(req, res) {
     const { loggedinUser } = req
     try {
-        const {category,daysToMake,description,imgUrls,likedByUsers,owner,packages,price,tags,title } = req.body
+        const {category,daysToMake,description,imgUrls,likedByUsers,packages,price,tags,title } = req.body
         const gig = {
             category,
             daysToMake,
             description,
             imgUrls,
             likedByUsers,
-            owner,
+            owner: loggedinUser,
             packages,
             price:+price,
             tags,
@@ -54,8 +54,10 @@ export async function addGig(req, res) {
 
 export async function updateGig(req, res) {
     try {
-        const {category,daysToMake,description,imgUrls,likedByUsers,owner,packages,price,tags,title } = req.body
+        const {_id,category,daysToMake,description,imgUrls,likedByUsers,owner,packages,price,tags,title } = req.body
+        console.log(_id,"id");
         const gig = {
+            _id,
             category,
             daysToMake,
             description,
@@ -67,6 +69,7 @@ export async function updateGig(req, res) {
             tags,
             title
         }
+        console.log(gig, "gig");
         const savedGig =  await gigService.update(gig)
         res.send(savedGig)
     } catch (err) {

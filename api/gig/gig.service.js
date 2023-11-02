@@ -11,7 +11,6 @@ export const gigService = {
     getById,
     add,
     update,
-    addGigMsg,
 }
 
 async function query(filterBy={minPrice: '', maxPrice:'', txt:'', category:'', tags:[], daysToMake:'', topRated:'' ,basicLevel:'',premiumLevel:''}) {
@@ -75,17 +74,24 @@ async function add(gig) {
 
 async function update(gig) {
     try {
-        // const gigToSave = {
-        //     name:gig.name,
-        //     inStock: gig.inStock,
-        //     price: +gig.price,
-        //     labels:gig.labels
-        // }
+        const gigToSave = 
+            {
+                category:gig.category,
+                daysToMake:gig.daysToMake,
+                description:gig.description,
+                imgUrls:gig.imgUrls,
+                likedByUsers:gig.likedByUsers,
+                packages:gig.packages,
+                price:+gig.price,
+                tags:gig.tags,
+                title:gig.title
+            }
         const collection = await dbService.getCollection('gig')
-        await collection.updateOne({ _id: ObjectId(gig._id) }, { $set: gig })
+        await collection.updateOne({ _id: new ObjectId(gig._id) }, { $set: gigToSave })
+        console.log(gig._id);
         return gig
     } catch (err) {
-        logger.error(`cannot update gig ${gig_id}`, err)
+        logger.error(`cannot update gig ${gig._id}`, err)
         throw err
     }
 }
