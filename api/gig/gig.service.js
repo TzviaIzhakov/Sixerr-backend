@@ -14,10 +14,9 @@ export const gigService = {
     addGigMsg,
 }
 
-async function query(filterBy={name:'',inStock:'',labels:[]}) {
+async function query(filterBy={minPrice: '', maxPrice:'', txt:'', category:'', tags:[], daysToMake:'', topRated:'' ,basicLevel:'',premiumLevel:''}) {
     try {
         const criteria = buildCriteria(filterBy)
-
         const collection = await dbService.getCollection('gig')
         var gigs = await collection.find(criteria).toArray()
         return gigs
@@ -35,8 +34,8 @@ function buildCriteria(filterBy) {
     if(filterBy.name){ 
         criteria.name = { $regex: filterBy.name, $options: 'i' }
     }
-    if(filterBy.labels && filterBy.labels.length>0){
-        criteria.labels = { $elemMatch: { $in: filterBy.labels } }
+    if(filterBy.tags && filterBy.tags.length>0){
+        criteria.tags = { $elemMatch: { $in: filterBy.tags } }
     }
     return criteria
 }
@@ -76,14 +75,14 @@ async function add(gig) {
 
 async function update(gig) {
     try {
-        const gigToSave = {
-            name:gig.name,
-            inStock: gig.inStock,
-            price: +gig.price,
-            labels:gig.labels
-        }
+        // const gigToSave = {
+        //     name:gig.name,
+        //     inStock: gig.inStock,
+        //     price: +gig.price,
+        //     labels:gig.labels
+        // }
         const collection = await dbService.getCollection('gig')
-        await collection.updateOne({ _id: ObjectId(gig._id) }, { $set: gigToSave })
+        await collection.updateOne({ _id: ObjectId(gig._id) }, { $set: gig })
         return gig
     } catch (err) {
         logger.error(`cannot update gig ${gig_id}`, err)

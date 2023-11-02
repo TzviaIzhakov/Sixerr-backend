@@ -3,10 +3,10 @@ import { logger } from '../../services/logger.service.js'
 
 export async function getGigs(req, res) {
     try {
-        let { name, inStock, labels } = req.query
-        if(labels && labels.length) labels = labels.split(',')
+        let { minPrice, maxPrice, txt, category, tags, daysToMake, topRated ,basicLevel,premiumLevel} = req.query
+        if(tags && tags.length) tags = tags.split(',')
 
-        const filterBy = {name: name || '',inStock: inStock || '',labels: labels || []}
+        const filterBy = {minPrice: minPrice || '',maxPrice:maxPrice|| '',txt:txt || '', category:category|| '',tags: tags || [], daysToMake: daysToMake || '',topRated:topRated || '',basicLevel:basicLevel || '',premiumLevel:premiumLevel || ''}
         logger.debug('Getting Gigs', filterBy)
 
         const gigs = await gigService.query(filterBy)
@@ -31,16 +31,19 @@ export async function getGigById(req, res) {
 export async function addGig(req, res) {
     const { loggedinUser } = req
     try {
-        const { name,inStock,price,labels,msgs,imgUrl } = req.body
+        const {category,daysToMake,description,imgUrls,likedByUsers,owner,packages,price,tags,title } = req.body
         const gig = {
-            name,
-            inStock,
-            price: +price,
-            labels,
-            msgs,
-            imgUrl
+            category,
+            daysToMake,
+            description,
+            imgUrls,
+            likedByUsers,
+            owner,
+            packages,
+            price:+price,
+            tags,
+            title
         }
-        // car.owner = loggedinUser
         const savedGig =  await gigService.add(gig)
         res.send(savedGig)
     } catch (err) {
@@ -51,13 +54,18 @@ export async function addGig(req, res) {
 
 export async function updateGig(req, res) {
     try {
-        const {  name,inStock,price,labels, _id} = req.body
+        const {category,daysToMake,description,imgUrls,likedByUsers,owner,packages,price,tags,title } = req.body
         const gig = {
-            _id,
-            name,
-            inStock,
-            price: +price,
-            labels
+            category,
+            daysToMake,
+            description,
+            imgUrls,
+            likedByUsers,
+            owner,
+            packages,
+            price:+price,
+            tags,
+            title
         }
         const savedGig =  await gigService.update(gig)
         res.send(savedGig)
