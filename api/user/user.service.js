@@ -91,15 +91,14 @@ async function remove(userId) {
 }
 
 async function update(user) {
-    console.log(user, 'update******************')
     //Check if userId is objectId or DemoData
     const isObjectId = ObjectId.isValid(user._id)
     try {
         // peek only updatable fields!
         const userToSave = {
             _id: isObjectId ? ObjectId(user._id) : user._id,
-            username: user.username,
-            fullname: user.fullname,
+            // username: user.username,
+            // fullname: user.fullname,
             reviews: user.reviews,
             isSeller: user.isSeller
         }

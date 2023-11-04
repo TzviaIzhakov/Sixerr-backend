@@ -53,9 +53,11 @@ export async function addGig(req, res) {
 }
 
 export async function updateGig(req, res) {
+
+    const { loggedinUser } = req
+
     try {
         const { _id, category, daysToMake, description, imgUrls, likedByUsers, owner, packages, price, tags, title } = req.body
-        console.log(_id, "id");
         const gig = {
             _id,
             category,
@@ -69,7 +71,7 @@ export async function updateGig(req, res) {
             tags,
             title
         }
-        console.log(gig, "gig");
+        if (loggedinUser._id !== gig.owner._id) return res.status(500).send({ err: 'Failed to update gig' })
         const savedGig = await gigService.update(gig)
         res.send(savedGig)
     } catch (err) {
@@ -80,9 +82,12 @@ export async function updateGig(req, res) {
 
 export async function removeGig(req, res) {
     try {
+        const { loggedinUser } = req
         const { id } = req.params
-        console.log(id, "gigId controller");
-        await gigService.remove(id)
+        const gig = await gigService.getById(id)
+
+        if (gig.owner._id !== loggedinUser._id) res.status(500).send({ err: 'Failed to remove gig' })
+        else await gigService.remove(id)
         res.send()
     } catch (err) {
         logger.error('Failed to remove gig', err)
