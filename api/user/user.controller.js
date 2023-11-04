@@ -2,7 +2,7 @@ import { userService } from './user.service.js'
 import { logger } from '../../services/logger.service.js'
 
 export async function getUser(req, res) {
-    console.log(req.params.id,"req");
+    console.log(req.params.id, "req");
     try {
         const user = await userService.getById(req.params.id)
         res.send(user)

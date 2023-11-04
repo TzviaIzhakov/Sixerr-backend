@@ -32,19 +32,43 @@ async function query(filterBy = {}) {
     }
 }
 
+// async function getById(userId) {
+//     try {
+//         const collection = await dbService.getCollection('user')
+//         const user = await collection.findOne({ _id: ObjectId(userId) })
+//         // const user = await collection.findOne({ _id: userId })
+//         // console.log("user",user);
+//         delete user.password
+//         return user
+//     } catch (err) {
+//         logger.error(`while finding user ${userId}`, err)
+//         throw err
+//     }
+// }
+
+
 async function getById(userId) {
     try {
         const collection = await dbService.getCollection('user')
-        const user = await collection.findOne({ _id: ObjectId(userId) })
-        // console.log("user",user);
+
+        // Check if userId is a valid ObjectId
+        const isObjectId = ObjectId.isValid(userId)
+        const query = isObjectId ? { _id: ObjectId(userId) } : { _id: userId }
+        const user = await collection.findOne(query)
+        if (!user) {
+            throw new Error(`User with id ${userId} not found`);
+        }
         delete user.password
         return user
+
     } catch (err) {
         logger.error(`while finding user ${userId}`, err)
         throw err
     }
 }
+
 async function getByUsername(username) {
+    console.log('username for mongo:', username)
     try {
         const collection = await dbService.getCollection('user')
         const user = await collection.findOne({ username })
@@ -67,13 +91,17 @@ async function remove(userId) {
 }
 
 async function update(user) {
+    console.log(user, 'update******************')
+    //Check if userId is objectId or DemoData
+    const isObjectId = ObjectId.isValid(user._id)
     try {
         // peek only updatable fields!
         const userToSave = {
-            _id: ObjectId(user._id),
+            _id: isObjectId ? ObjectId(user._id) : user._id,
             username: user.username,
             fullname: user.fullname,
-            balance: user.balance
+            reviews: user.reviews,
+            isSeller: user.isSeller
         }
         const collection = await dbService.getCollection('user')
         await collection.updateOne({ _id: userToSave._id }, { $set: userToSave })
@@ -100,8 +128,8 @@ async function add(user) {
             desc: '',
             isSeller: false,
             lang: ["English", "Hebrew"],
-            level:1,
-            location:'Israel',
+            level: 1,
+            location: 'Israel',
             reviews: []
         }
         const collection = await dbService.getCollection('user')

@@ -1,7 +1,7 @@
 import express from 'express'
 import { requireAuth, requireAdmin } from '../../middlewares/requireAuth.middleware.js'
 import { log } from '../../middlewares/logger.middleware.js'
-import { getGigs, getGigById, addGig, updateGig, removeGig} from './gig.controller.js'
+import { getGigs, getGigById, addGig, updateGig, removeGig } from './gig.controller.js'
 
 export const gigRoutes = express.Router()
 
@@ -10,9 +10,9 @@ export const gigRoutes = express.Router()
 
 gigRoutes.get('/', log, getGigs)
 gigRoutes.get('/:id', getGigById)
-gigRoutes.post('/',requireAuth,requireAdmin, addGig)
-gigRoutes.put('/', updateGig)
-gigRoutes.delete('/:id',requireAuth,requireAdmin, removeGig)
+gigRoutes.post('/', requireAuth, addGig)
+gigRoutes.put('/', requireAuth, updateGig)
+gigRoutes.delete('/:id', requireAuth, removeGig)
 // gigRoutes.post('/:id/msg', requireAuth,addGigMsg)
 
 

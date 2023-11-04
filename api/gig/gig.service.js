@@ -13,7 +13,7 @@ export const gigService = {
     update,
 }
 
-async function query(filterBy={minPrice: '', maxPrice:'', txt:'', category:'', tags:[], daysToMake:'', topRated:'' ,basicLevel:'',premiumLevel:''}) {
+async function query(filterBy = { minPrice: '', maxPrice: '', txt: '', category: '', tags: [], daysToMake: '', topRated: '', basicLevel: '', premiumLevel: '' }) {
     try {
         const criteria = buildCriteria(filterBy)
         const collection = await dbService.getCollection('gig')
@@ -27,13 +27,13 @@ async function query(filterBy={minPrice: '', maxPrice:'', txt:'', category:'', t
 
 function buildCriteria(filterBy) {
     const criteria = {}
-    if(filterBy.inStock){
+    if (filterBy.inStock) {
         criteria.inStock = JSON.parse(filterBy.inStock)
     }
-    if(filterBy.name){ 
+    if (filterBy.name) {
         criteria.name = { $regex: filterBy.name, $options: 'i' }
     }
-    if(filterBy.tags && filterBy.tags.length>0){
+    if (filterBy.tags && filterBy.tags.length > 0) {
         criteria.tags = { $elemMatch: { $in: filterBy.tags } }
     }
     return criteria
@@ -54,7 +54,6 @@ async function remove(gigId) {
     try {
         const collection = await dbService.getCollection('gig')
         await collection.deleteOne({ _id: ObjectId(gigId) })
-        console.log("ppppppp");
     } catch (err) {
         logger.error(`cannot remove gig ${gigId}`, err)
         throw err
@@ -74,18 +73,18 @@ async function add(gig) {
 
 async function update(gig) {
     try {
-        const gigToSave = 
-            {
-                category:gig.category,
-                daysToMake:gig.daysToMake,
-                description:gig.description,
-                imgUrls:gig.imgUrls,
-                likedByUsers:gig.likedByUsers,
-                packages:gig.packages,
-                price:+gig.price,
-                tags:gig.tags,
-                title:gig.title
-            }
+        const gigToSave =
+        {
+            category: gig.category,
+            daysToMake: gig.daysToMake,
+            description: gig.description,
+            imgUrls: gig.imgUrls,
+            likedByUsers: gig.likedByUsers,
+            packages: gig.packages,
+            price: +gig.price,
+            tags: gig.tags,
+            title: gig.title
+        }
         const collection = await dbService.getCollection('gig')
         await collection.updateOne({ _id: new ObjectId(gig._id) }, { $set: gigToSave })
         console.log(gig._id);

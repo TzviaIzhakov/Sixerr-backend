@@ -3,10 +3,10 @@ import { logger } from '../../services/logger.service.js'
 
 export async function getGigs(req, res) {
     try {
-        let { minPrice, maxPrice, txt, category, tags, daysToMake, topRated ,basicLevel,premiumLevel} = req.query
-        if(tags && tags.length) tags = tags.split(',')
+        let { minPrice, maxPrice, txt, category, tags, daysToMake, topRated, basicLevel, premiumLevel } = req.query
+        if (tags && tags.length) tags = tags.split(',')
 
-        const filterBy = {minPrice: minPrice || '',maxPrice:maxPrice|| '',txt:txt || '', category:category|| '',tags: tags || [], daysToMake: daysToMake || '',topRated:topRated || '',basicLevel:basicLevel || '',premiumLevel:premiumLevel || ''}
+        const filterBy = { minPrice: minPrice || '', maxPrice: maxPrice || '', txt: txt || '', category: category || '', tags: tags || [], daysToMake: daysToMake || '', topRated: topRated || '', basicLevel: basicLevel || '', premiumLevel: premiumLevel || '' }
         logger.debug('Getting Gigs', filterBy)
 
         const gigs = await gigService.query(filterBy)
@@ -20,7 +20,7 @@ export async function getGigs(req, res) {
 export async function getGigById(req, res) {
     try {
         const { id } = req.params
-        const gig =  await gigService.getById(id);
+        const gig = await gigService.getById(id);
         res.send(gig)
     } catch (err) {
         logger.error('Failed to get gig', err)
@@ -31,20 +31,20 @@ export async function getGigById(req, res) {
 export async function addGig(req, res) {
     const { loggedinUser } = req
     try {
-        const {category,daysToMake,description,imgUrls,likedByUsers,packages,price,tags,title } = req.body
+        const { category, daysToMake, description, imgUrls, likedByUsers, packages, price, tags, title, owner } = req.body
         const gig = {
             category,
             daysToMake,
             description,
             imgUrls,
             likedByUsers,
-            owner: loggedinUser,
+            owner,
             packages,
-            price:+price,
+            price: +price,
             tags,
             title
         }
-        const savedGig =  await gigService.add(gig)
+        const savedGig = await gigService.add(gig)
         res.send(savedGig)
     } catch (err) {
         logger.error('Failed to add gig', err)
@@ -54,8 +54,8 @@ export async function addGig(req, res) {
 
 export async function updateGig(req, res) {
     try {
-        const {_id,category,daysToMake,description,imgUrls,likedByUsers,owner,packages,price,tags,title } = req.body
-        console.log(_id,"id");
+        const { _id, category, daysToMake, description, imgUrls, likedByUsers, owner, packages, price, tags, title } = req.body
+        console.log(_id, "id");
         const gig = {
             _id,
             category,
@@ -65,12 +65,12 @@ export async function updateGig(req, res) {
             likedByUsers,
             owner,
             packages,
-            price:+price,
+            price: +price,
             tags,
             title
         }
         console.log(gig, "gig");
-        const savedGig =  await gigService.update(gig)
+        const savedGig = await gigService.update(gig)
         res.send(savedGig)
     } catch (err) {
         logger.error('Failed to update gig', err)
@@ -81,7 +81,7 @@ export async function updateGig(req, res) {
 export async function removeGig(req, res) {
     try {
         const { id } = req.params
-        console.log(id,"gigId controller");
+        console.log(id, "gigId controller");
         await gigService.remove(id)
         res.send()
     } catch (err) {
