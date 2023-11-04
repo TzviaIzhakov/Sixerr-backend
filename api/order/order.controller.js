@@ -26,6 +26,7 @@ export async function getOrderById(req, res) {
 
 export async function addOrder(req, res) {
     const { loggedinUser } = req
+    console.log(req.body, loggedinUser)
     try {
         const { buyer, createdAt, daysToMake, gig, packPrice, seller, status, title } = req.body
         const order = {
@@ -38,7 +39,7 @@ export async function addOrder(req, res) {
             status,
             title
         }
-        if (loggedinUser._id !== buyer._id) res.status(500).send({ err: 'Failed to add order' })
+        if (loggedinUser._id !== buyer._id) return new Error('Failed to add a new order')
         const savedOrder = await orderService.add(order)
         res.send(savedOrder)
     } catch (err) {
@@ -57,7 +58,7 @@ export async function updateOrder(req, res) {
 
     } catch (err) {
         logger.error('Failed to update order', err)
-        res.status(500).send({ err: 'Failed to update order' })
+        // res.status(500).send({ err: 'Failed to update order' })
     }
 }
 
