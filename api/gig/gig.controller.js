@@ -13,9 +13,9 @@ export async function getGigs(req, res) {
             category: category || '',
             tags: tags || [],
             daysToMake: +daysToMake || '',
-            // topRated:topRated || '',
-            basicLevel: basicLevel || '',
-            premiumLevel: premiumLevel || '',
+            topRated: JSON.parse(topRated),
+            basicLevel: JSON.parse(basicLevel),
+            premiumLevel:JSON.parse(premiumLevel),
             userId: userId || ''
         }
         console.log(filterBy, "filterBy");
