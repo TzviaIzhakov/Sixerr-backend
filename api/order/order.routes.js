@@ -12,9 +12,8 @@ orderRoutes.get('/', log, getOrders)
 orderRoutes.get('/:id', getOrderById)
 orderRoutes.post('/', requireAuth, addOrder)
 orderRoutes.put('/', updateOrder)
-orderRoutes.delete('/:id', removeOrder)
 
+// orderRoutes.delete('/:id', removeOrder)
 // router.delete('/:id', requireAuth, requireAdmin, removeCar)
-
 // orderRoutes.post('/:id/msg', requireAuth,addOrderMsg)
 // orderRoutes.delete('/:id/msg/:msgId', removeCarMsg)
