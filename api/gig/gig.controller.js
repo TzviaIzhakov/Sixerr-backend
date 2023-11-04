@@ -3,10 +3,22 @@ import { logger } from '../../services/logger.service.js'
 
 export async function getGigs(req, res) {
     try {
-        let { minPrice, maxPrice, txt, category, tags, daysToMake, topRated, basicLevel, premiumLevel } = req.query
+        let { minPrice, maxPrice, txt, category, tags, daysToMake, topRated, basicLevel, premiumLevel, userId } = req.query
         if (tags && tags.length) tags = tags.split(',')
-
-        const filterBy = { minPrice: minPrice || '', maxPrice: maxPrice || '', txt: txt || '', category: category || '', tags: tags || [], daysToMake: daysToMake || '', topRated: topRated || '', basicLevel: basicLevel || '', premiumLevel: premiumLevel || '' }
+        // console.log(typeof(basicLevel),"basic");
+        const filterBy = {
+            minPrice: +minPrice || '',
+            maxPrice: +maxPrice || '',
+            txt: txt || '',
+            category: category || '',
+            tags: tags || [],
+            daysToMake: +daysToMake || '',
+            // topRated:topRated || '',
+            basicLevel: basicLevel || '',
+            premiumLevel: premiumLevel || '',
+            userId: userId || ''
+        }
+        console.log(filterBy, "filterBy");
         logger.debug('Getting Gigs', filterBy)
 
         const gigs = await gigService.query(filterBy)

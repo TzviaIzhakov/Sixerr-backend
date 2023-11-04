@@ -13,7 +13,7 @@ export const gigService = {
     update,
 }
 
-async function query(filterBy = { minPrice: '', maxPrice: '', txt: '', category: '', tags: [], daysToMake: '', topRated: '', basicLevel: '', premiumLevel: '' }) {
+async function query(filterBy = { minPrice: '', maxPrice: '', txt: '', category: '', tags: [], daysToMake: '', topRated: '', basicLevel: '', premiumLevel: '', userId: '' }) {
     try {
         const criteria = buildCriteria(filterBy)
         const collection = await dbService.getCollection('gig')
@@ -27,15 +27,87 @@ async function query(filterBy = { minPrice: '', maxPrice: '', txt: '', category:
 
 function buildCriteria(filterBy) {
     const criteria = {}
-    if (filterBy.inStock) {
-        criteria.inStock = JSON.parse(filterBy.inStock)
+    if (filterBy.minPrice || filterBy.maxPrice) criteria.price = {};
+
+    if (filterBy.minPrice && filterBy.maxPrice) {
+        if (filterBy.minPrice > filterBy.maxPrice) {
+            // Swap minPrice and maxPrice
+            const temp = filterBy.minPrice;
+            filterBy.minPrice = filterBy.maxPrice;
+            filterBy.maxPrice = temp;
+
+            criteria.price = {
+                $gte: filterBy.minPrice,
+                $lte: filterBy.maxPrice
+            };
+        } else {
+            // Use the $gte and $lte operators directly
+            criteria.price = {
+                $gte: filterBy.minPrice,
+                $lte: filterBy.maxPrice
+            };
+        }
     }
-    if (filterBy.name) {
-        criteria.name = { $regex: filterBy.name, $options: 'i' }
+
+    if (filterBy.minPrice) {
+        criteria.price.$gte = filterBy.minPrice;
     }
+
+    if (filterBy.maxPrice) {
+        criteria.price.$lte = filterBy.maxPrice;
+    }
+
+    if (filterBy.category) {
+        criteria.category = filterBy.category;
+    }
+
     if (filterBy.tags && filterBy.tags.length > 0) {
         criteria.tags = { $elemMatch: { $in: filterBy.tags } }
     }
+
+    if (filterBy.userId) {
+        criteria['owner._id'] = filterBy.userId;
+    }
+
+    if (filterBy.daysToMake) {
+        criteria['packages.basic.packDaysToMake'] = { $lte: filterBy.daysToMake };
+    }
+
+
+    //check if works
+    if (filterBy.topRated) {
+        criteria['owner.rate'] = { $gte: 5 };
+    }
+    //need to work
+    if (filterBy.basicLevel && filterBy.premiumLevel) {
+        criteria['owner.level'] = { $in: [1, 2] };
+    } else if (filterBy.basicLevel) {
+        criteria['owner.level'] = 1;
+    } else if (filterBy.premiumLevel) {
+        criteria['owner.level'] = 2;
+    }
+
+    //works!!
+    if (filterBy.txt) {
+        const regex = new RegExp(filterBy.txt, 'i');
+        criteria.$or = [
+            { 'tags': { $elemMatch: { $regex: regex } } },
+            { 'title': { $regex: regex } },
+            { 'description': { $regex: regex } }
+        ];
+    }
+
+    // if (filterBy.sortBy) {
+    //     switch (filterBy.sortBy) {
+    //       case 'new':
+    //         criteria.$sort = { createdAt: -1 }; // Sort by createdAt in descending order (newest first)
+    //         break;
+    //       case 'recommend':
+    //         criteria.$sort = { 'owner.rate': -1 }; // Sort by owner's rate in descending order (highest rate first)
+    //         break;
+    //     }
+    // }
+    console.log(criteria, "cri");
     return criteria
 }
 
