@@ -2,7 +2,6 @@ import { userService } from './user.service.js'
 import { logger } from '../../services/logger.service.js'
 
 export async function getUser(req, res) {
-    console.log(req.params.id, "req");
     try {
         const user = await userService.getById(req.params.id)
         res.send(user)
@@ -37,6 +36,7 @@ export async function deleteUser(req, res) {
 }
 
 export async function updateUser(req, res) {
+    console.log('------------------------------------------------')
     try {
         const user = req.body
         const savedUser = await userService.update(user)

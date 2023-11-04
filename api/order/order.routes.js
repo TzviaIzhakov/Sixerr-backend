@@ -8,10 +8,10 @@ export const orderRoutes = express.Router()
 // middleware that is specific to this router
 // router.use(requireAuth)
 
-orderRoutes.get('/', log, getOrders)
-orderRoutes.get('/:id', getOrderById)
+orderRoutes.get('/', log, requireAuth, getOrders)
+orderRoutes.get('/:id', requireAuth, getOrderById)
 orderRoutes.post('/', requireAuth, addOrder)
-orderRoutes.put('/', updateOrder)
+orderRoutes.put('/', requireAuth, updateOrder)
 
 // orderRoutes.delete('/:id', removeOrder)
 // router.delete('/:id', requireAuth, requireAdmin, removeCar)
