@@ -22,10 +22,8 @@ async function login(username, password) {
     const user = await userService.getByUsername(username)
     // console.log(user, "user from service auth");
     if (!user) throw new Error('Invalid username or password')
-    console.log(password);
-    console.log(user.password);
     const match = await bcrypt.compare(password, user.password)
-    if (!match){
+    if (!match) {
         console.log("oooo");
         throw new Error('Invalid username or password')
     }
@@ -40,12 +38,12 @@ async function signup(username, password, fullname, imgUrl) {
     if (!username || !password || !fullname) throw new Error('Missing details')
 
     const hash = await bcrypt.hash(password, saltRounds)
-    return userService.add({ username, password: hash, fullname, imgUrl})
+    return userService.add({ username, password: hash, fullname, imgUrl })
 }
 
 function getLoginToken(user) {
-    const userInfo = {_id : user._id, fullname: user.fullname}
-    return cryptr.encrypt(JSON.stringify(userInfo))    
+    const userInfo = { _id: user._id, fullname: user.fullname }
+    return cryptr.encrypt(JSON.stringify(userInfo))
 }
 
 function validateToken(loginToken) {
@@ -53,7 +51,7 @@ function validateToken(loginToken) {
         const json = cryptr.decrypt(loginToken)
         const loggedinUser = JSON.parse(json)
         return loggedinUser
-    } catch(err) {
+    } catch (err) {
         console.log('Invalid login token')
     }
     return null
