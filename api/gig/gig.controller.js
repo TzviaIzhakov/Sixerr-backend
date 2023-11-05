@@ -4,7 +4,7 @@ import { logger } from '../../services/logger.service.js'
 export async function getGigs(req, res) {
     console.log(req.query, 'Query')
     try {
-        let { minPrice, maxPrice, txt, category, tags, daysToMake, topRated, basicLevel, premiumLevel, userId } = req.query
+        let { minPrice, maxPrice, txt, category, tags, daysToMake, topRated, basicLevel, premiumLevel, userId, sortBy } = req.query
         // if (tags && tags.length) tags = tags.split(',')
         // console.log(typeof(basicLevel),"basic");
         const filterBy = {
@@ -17,7 +17,8 @@ export async function getGigs(req, res) {
             topRated: topRated ? JSON.parse(topRated) : '',
             basicLevel: basicLevel ? JSON.parse(basicLevel) : '',
             premiumLevel: premiumLevel ? JSON.parse(premiumLevel) : '',
-            userId: userId || ''
+            userId: userId || '',
+            sortBy: sortBy || '',
         }
         logger.debug('Getting Gigs', filterBy)
 

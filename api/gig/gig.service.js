@@ -13,11 +13,24 @@ export const gigService = {
     update,
 }
 
-async function query(filterBy = { minPrice: '', maxPrice: '', txt: '', category: '', tags: [], daysToMake: '', topRated: '', basicLevel: '', premiumLevel: '', userId: '' }) {
+async function query(filterBy = { minPrice: '', maxPrice: '', txt: '', category: '', tags: [], daysToMake: '', topRated: '', basicLevel: '', premiumLevel: '', userId: '', sortBy: '' }) {
     try {
         const criteria = buildCriteria(filterBy)
         const collection = await dbService.getCollection('gig')
-        var gigs = await collection.find(criteria).toArray()
+        let cursor = collection.find(criteria);
+
+        if (filterBy.sortBy) {
+            switch (filterBy.sortBy) {
+                case 'new':
+                    cursor = cursor.sort({ createdAt: -1 }); // Sort by createdAt in descending order (newest first)
+                    break;
+                case 'recommend':
+                    cursor = cursor.sort({ 'owner.rate': -1 }); // Sort by owner's rate in descending order (highest rate first)
+                    break;
+            }
+        }
+
+        const gigs = await cursor.toArray();
         return gigs
     } catch (err) {
         logger.error('cannot find gigs', err)
@@ -99,12 +112,12 @@ function buildCriteria(filterBy) {
 
     // if (filterBy.sortBy) {
     //     switch (filterBy.sortBy) {
-    //       case 'new':
-    //         criteria.$sort = { createdAt: -1 }; // Sort by createdAt in descending order (newest first)
-    //         break;
-    //       case 'recommend':
-    //         criteria.$sort = { 'owner.rate': -1 }; // Sort by owner's rate in descending order (highest rate first)
-    //         break;
+    //         case 'new':
+    //             criteria.$sort = { createdAt: -1 }; // Sort by createdAt in descending order (newest first)
+    //             break;
+    //         case 'recommend':
+    //             criteria.$sort = { 'owner.rate': -1 }; // Sort by owner's rate in descending order (highest rate first)
+    //             break;
     //     }
     // }
     console.log(criteria, "Criteria ***");
