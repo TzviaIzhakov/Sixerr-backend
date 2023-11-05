@@ -2,7 +2,7 @@ import { gigService } from './gig.service.js'
 import { logger } from '../../services/logger.service.js'
 
 export async function getGigs(req, res) {
-    console.log(req.query, 'Query')
+    // console.log(req.query, 'Query')
     try {
         let { minPrice, maxPrice, txt, category, tags, daysToMake, topRated, basicLevel, premiumLevel, userId, sortBy } = req.query
         // if (tags && tags.length) tags = tags.split(',')
@@ -20,7 +20,7 @@ export async function getGigs(req, res) {
             userId: userId || '',
             sortBy: sortBy || '',
         }
-        logger.debug('Getting Gigs', filterBy)
+        // logger.debug('Getting Gigs', filterBy)
 
         const gigs = await gigService.query(filterBy)
         res.send(gigs)

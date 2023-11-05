@@ -55,8 +55,8 @@ export async function updateOrder(req, res) {
         const order = await orderService.getById(_id)
         order.status = status
         const savedOrder = await orderService.update(order)
-        // socketService.broadcast({type:'order-updated', data: savedOrder, userId:order.buyer._id})
-        socketService.emitTo({type:'order-updated', data: savedOrder})
+        // socketService.emitTo({type:'order-updated', data: savedOrder})
+        socketService.emitToUser({type:'order-updated', data: savedOrder, userId: savedOrder.buyer._id})
         console.log("update order socket");
         res.send(savedOrder)
 

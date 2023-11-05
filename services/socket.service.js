@@ -60,7 +60,7 @@ function emitTo({ type, data, label }) {
 async function emitToUser({ type, data, userId }) {
     userId = userId.toString()
     const socket = await _getUserSocket(userId)
-
+    
     if (socket) {
         logger.info(`Emiting event: ${type} to user: ${userId} socket [id: ${socket.id}]`)
         socket.emit(type, data)
@@ -88,7 +88,6 @@ async function broadcast({ type, data, room = null, userId }) {
     } else {
         logger.info(`Emit to all`)
         gIo.emit(type, data)
-        console.log("hhhhhhh");
     }
 }
 
