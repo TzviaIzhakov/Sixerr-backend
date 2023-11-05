@@ -4,8 +4,7 @@ import { logger } from '../../services/logger.service.js'
 export async function getGigs(req, res) {
     try {
         let { minPrice, maxPrice, txt, category, tags, daysToMake, topRated, basicLevel, premiumLevel, userId } = req.query
-        if (tags && tags.length) tags = tags.split(',')
-        // console.log(typeof(basicLevel),"basic");
+        // console.log(tags,"tags");
         const filterBy = {
             minPrice: +minPrice || '',
             maxPrice: +maxPrice || '',
