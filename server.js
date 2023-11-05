@@ -1,9 +1,12 @@
 import express from 'express'
+import express from 'express'
 import cookieParser from 'cookie-parser'
 import http from 'http'
 import cors from 'cors'
+import cors from 'cors'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
+import "dotenv/config.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -51,8 +54,6 @@ app.use('/api/gig', gigRoutes)
 app.use('/api/order', orderRoutes)
 // app.use('/api/order', orderRoutes)
 setupSocketAPI(server)
-
-
 
 
 // Make every unmatched server-side-route fall back to index.html
