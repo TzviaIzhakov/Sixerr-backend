@@ -1,8 +1,6 @@
 import express from 'express'
-import express from 'express'
 import cookieParser from 'cookie-parser'
 import http from 'http'
-import cors from 'cors'
 import cors from 'cors'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
