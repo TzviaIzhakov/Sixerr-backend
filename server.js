@@ -1,9 +1,10 @@
-import express  from 'express'
+import express from 'express'
 import cookieParser from 'cookie-parser'
 import http from 'http'
-import cors  from 'cors'
+import cors from 'cors'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
+import "dotenv/config.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -27,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
     // Configuring CORS
     const corsOptions = {
         // Make sure origin contains the url your frontend is running on
-        origin: ['http://127.0.0.1:5173', 'http://localhost:5173','http://127.0.0.1:3000', 'http://localhost:3000'],
+        origin: ['http://127.0.0.1:5173', 'http://localhost:5173', 'http://127.0.0.1:3030', 'http://localhost:3030/', 'http://127.0.0.1:3000', 'http://localhost:3000'],
         credentials: true
     }
     app.use(cors(corsOptions))
@@ -51,8 +52,6 @@ app.use('/api/gig', gigRoutes)
 app.use('/api/order', orderRoutes)
 // app.use('/api/order', orderRoutes)
 setupSocketAPI(server)
-
-
 
 
 // Make every unmatched server-side-route fall back to index.html
