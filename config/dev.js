@@ -1,5 +1,5 @@
 export default {
     dbURL: 'mongodb://127.0.0.1:27017',
-    // dbURL: 'mongodb+srv://tzvia:tzvia123@cluster0.g0qeyec.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp',
+    // dbURL: 'mongodb+srv://aviciOneOne1:9r4mz0KvaKgEqfSf@cluster0.jfhwxxy.mongodb.net/',
     dbName: 'SixerrDB',
 }
