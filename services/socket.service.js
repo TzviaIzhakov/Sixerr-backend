@@ -88,6 +88,7 @@ async function broadcast({ type, data, room = null, userId }) {
     } else {
         logger.info(`Emit to all`)
         gIo.emit(type, data)
+        console.log("hhhhhhh");
     }
 }
 
