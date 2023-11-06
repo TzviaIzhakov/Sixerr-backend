@@ -44,9 +44,10 @@ export async function getGigById(req, res) {
 export async function addGig(req, res) {
     const { loggedinUser } = req
     try {
-        const { category, daysToMake, description, imgUrls, likedByUsers, packages, price, tags, title, owner } = req.body
+        const { category, createdAt, daysToMake, description, imgUrls, likedByUsers, packages, price, tags, title, owner } = req.body
         const gig = {
             category,
+            createdAt,
             daysToMake,
             description,
             imgUrls,
@@ -57,6 +58,7 @@ export async function addGig(req, res) {
             tags,
             title
         }
+        if (!owner || loggedinUser._id !== gig.owner._id) return res.status(500).send({ err: 'Failed to add gig' })
         const savedGig = await gigService.add(gig)
         res.send(savedGig)
     } catch (err) {
@@ -66,9 +68,7 @@ export async function addGig(req, res) {
 }
 
 export async function updateGig(req, res) {
-
     const { loggedinUser } = req
-
     try {
         const { _id, category, daysToMake, description, imgUrls, likedByUsers, owner, packages, price, tags, title } = req.body
         const gig = {
@@ -82,9 +82,9 @@ export async function updateGig(req, res) {
             packages,
             price: +price,
             tags,
-            title
+            title,
         }
-        if (loggedinUser._id !== gig.owner._id) return res.status(500).send({ err: 'Failed to update gig' })
+        if (!owner || loggedinUser._id !== gig.owner._id) return res.status(500).send({ err: 'Failed to update gig' })
         const savedGig = await gigService.update(gig)
         res.send(savedGig)
     } catch (err) {
