@@ -71,7 +71,6 @@ async function update(order) {
             createdAt: +order.createdAt,
             daysToMake: +order.daysToMake,
             gig: order.gig,
-            owner: order.owner,
             packPrice: +order.packPrice,
             seller: order.seller,
             status: order.status,
