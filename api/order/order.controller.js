@@ -27,7 +27,7 @@ export async function getOrderById(req, res) {
 
 export async function addOrder(req, res) {
     const { loggedinUser } = req
-    console.log(req.body, loggedinUser)
+    // console.log(req.body, loggedinUser)
     try {
         const { buyer, createdAt, daysToMake, gig, packPrice, seller, status, title } = req.body
         const order = {
@@ -42,7 +42,7 @@ export async function addOrder(req, res) {
         }
         if (loggedinUser._id !== buyer._id) return new Error('Failed to add a new order')
         const savedOrder = await orderService.add(order)
-        socketService.emitToUser({type:'order-added', data: savedOrder, userId: savedOrder.seller._id})
+        socketService.emitToUser({ type: 'order-added', data: savedOrder, userId: savedOrder.seller._id })
         res.send(savedOrder)
     } catch (err) {
         logger.error('Failed to add order', err)
@@ -57,7 +57,7 @@ export async function updateOrder(req, res) {
         order.status = status
         const savedOrder = await orderService.update(order)
         // socketService.emitTo({type:'order-updated', data: savedOrder})
-        socketService.emitToUser({type:'order-updated', data: savedOrder, userId: savedOrder.buyer._id})
+        socketService.emitToUser({ type: 'order-updated', data: savedOrder, userId: savedOrder.buyer._id })
         console.log("update order socket");
         res.send(savedOrder)
 

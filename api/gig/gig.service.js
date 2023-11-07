@@ -120,7 +120,6 @@ function buildCriteria(filterBy) {
     //             break;
     //     }
     // }
-    console.log(criteria, "Criteria ***");
     return criteria
 }
 
