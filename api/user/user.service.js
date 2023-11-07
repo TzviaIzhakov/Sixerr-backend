@@ -129,7 +129,8 @@ async function add(user) {
             lang: ["English", "Hebrew"],
             level: 1,
             location: 'Israel',
-            reviews: []
+            reviews: [],
+            rate: +user.rate
         }
         const collection = await dbService.getCollection('user')
         await collection.insertOne(userToAdd)
