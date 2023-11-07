@@ -40,34 +40,34 @@ async function query(filterBy = { minPrice: '', maxPrice: '', txt: '', category:
 
 function buildCriteria(filterBy) {
     const criteria = {}
-    if (filterBy.minPrice || filterBy.maxPrice) criteria.price = {};
+    if (filterBy.minPrice || filterBy.maxPrice) criteria['packages.basic.packPrice'] = {};
 
     if (filterBy.minPrice && filterBy.maxPrice) {
         if (filterBy.minPrice > filterBy.maxPrice) {
             // Swap minPrice and maxPrice
-            const temp = filterBy.minPrice;
-            filterBy.minPrice = filterBy.maxPrice;
-            filterBy.maxPrice = temp;
-
-            criteria.price = {
+            // const temp = filterBy.minPrice;
+            // filterBy.minPrice = filterBy.maxPrice;
+            // filterBy.maxPrice = temp;
+            [filterBy.minPrice, filterBy.maxPrice] = [filterBy.maxPrice,filterBy.minPrice]
+            criteria['packages.basic.packPrice'] = {
                 $gte: filterBy.minPrice,
                 $lte: filterBy.maxPrice
-            };
+            }
         } else {
             // Use the $gte and $lte operators directly
-            criteria.price = {
+            criteria['packages.basic.packPrice'] = {
                 $gte: filterBy.minPrice,
                 $lte: filterBy.maxPrice
-            };
+            }
         }
     }
 
-    if (filterBy.minPrice) {
-        criteria.price.$gte = filterBy.minPrice;
+    else if (filterBy.minPrice) {
+        criteria['packages.basic.packPrice'] = {$gte :filterBy.minPrice};
     }
 
-    if (filterBy.maxPrice) {
-        criteria.price.$lte = filterBy.maxPrice;
+    else if (filterBy.maxPrice) {
+        criteria['packages.basic.packPrice'] = {$lte: filterBy.maxPrice}
     }
 
     if (filterBy.category) {
