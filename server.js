@@ -34,19 +34,29 @@ if (process.env.NODE_ENV === 'production') {
     app.use(cors(corsOptions))
 }
 
+import { authRoutes } from './api/auth/auth.routes.js'
+import { userRoutes } from './api/user/user.routes.js'
+import { toyRoutes } from './api/toy/toy.routes.js'
 import { gigRoutes } from './api/gig/gig.routes.js'
-import { messageRoutes } from './api/msg/msg.routes.js'
+import { orderRoutes } from './api/order/order.routes.js'
 import { setupSocketAPI } from './services/socket.service.js'
 
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
 app.all('*', setupAsyncLocalStorage)
-
 // routes
+app.use('/api/auth', authRoutes)
+app.use('/api/user', userRoutes)
+app.use('/api/toy', toyRoutes)
 app.use('/api/gig', gigRoutes)
-app.use('/api/msg', messageRoutes)
+app.use('/api/order', orderRoutes)
+// app.use('/api/order', orderRoutes)
 setupSocketAPI(server)
 
+
+// Make every unmatched server-side-route fall back to index.html
+// So when requesting http://localhost:3030/index.html/car/123 it will still respond with
+// our SPA (single page app) (the index.html file) and allow vue-router to take it from there
 
 app.get('/**', (req, res) => {
     res.sendFile(path.resolve('public/index.html'))
